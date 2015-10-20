@@ -46,7 +46,7 @@ public class ExemploNuvemTest implements SauceOnDemandSessionIdProvider {
     public static LinkedList browsersStrings() {
         LinkedList browsers = new LinkedList();
         browsers.add(new String[]{"Windows 8.1", "11", "internet explorer"});
-        browsers.add(new String[]{"OSX 10.8", "6", "safari"});
+        browsers.add(new String[]{"Windows 7", "36", "firefox"});
         return browsers;
     }
 
@@ -61,26 +61,35 @@ public class ExemploNuvemTest implements SauceOnDemandSessionIdProvider {
         capabilities.setCapability(CapabilityType.PLATFORM, os);        
         capabilities.setCapability("name", testNameRule.getMethodName());
         
-        this.driver = new RemoteWebDriver(new URL("http://fav-organizer:67f84d23-778a-4def-b579-c98c363a097f@ondemand.saucelabs.com:80/wd/hub"),
+        driver = new RemoteWebDriver(new URL("http://fav-organizer:67f84d23-778a-4def-b579-c98c363a097f@ondemand.saucelabs.com:80/wd/hub"),
                 capabilities);
-        this.sessionId = (((RemoteWebDriver) driver).getSessionId()).toString();
+        sessionId = (((RemoteWebDriver) driver).getSessionId()).toString();
         
-        driver.get("http://54.149.253.66:3000/#/bookmarks");
+        driver.get("http://45.55.53.141:5000/");
     }
 
     @Test
-    public void verificarNumeroBookmarks() {
-    	String infoNumeroBookmarks = driver.findElement(By.xpath("//div/p[2]")).getText();
+    public void verificarTitulo() {
+    	String titulo = driver.getTitle();
     	
-    	assertEquals("Bookmarks added: 5", infoNumeroBookmarks);
+    	assertEquals("TodoApp -- Store your Todo items", titulo);
     }
-
+    
     @Test
-    public void verificarRedirecionamentoBotaoNew() {
-    	WebElement btnNewBookmark = driver.findElement(By.id("btnNewBookmark"));
-    	btnNewBookmark.click();
+    public void criarTodo() {
+    	WebElement novoTodo = driver.findElement(By.id("new"));
+    	novoTodo.click();
     	
-    	assertEquals("http://54.149.253.66:3000/#/bookmark", driver.getCurrentUrl());
+    	WebElement nomeTodo = driver.findElement(By.id("title"));
+    	nomeTodo.sendKeys("Teste Selenium");
+    	
+    	WebElement descricao = driver.findElement(By.id("text"));
+    	descricao.sendKeys("Teste com Selenium na nuvem AEEEEEE");
+    	
+    	WebElement salvar = driver.findElement(By.id("save"));
+    	salvar.click();
+    	
+    	assertEquals("http://45.55.53.141:5000/", driver.getCurrentUrl());
     }
 
     @After
